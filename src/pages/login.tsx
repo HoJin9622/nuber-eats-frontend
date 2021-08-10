@@ -1,4 +1,4 @@
-import { ApolloError, gql, useMutation } from '@apollo/client'
+import { gql, useMutation } from '@apollo/client'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { FormError } from '../components/form-error'
@@ -31,21 +31,23 @@ export const Login = () => {
   } = useForm<ILoginForm>()
   const onCompleted = (data: loginMutation) => {
     const {
-      login: { error, ok, token },
+      login: { ok, token },
     } = data
     if (ok) {
       console.log(token)
     }
   }
-  const [loginMutation, { data: loginMutationResult }] = useMutation<
+  const [loginMutation, { data: loginMutationResult, loading }] = useMutation<
     loginMutation,
     loginMutationVariables
   >(LOGIN_MUTATION, {
     onCompleted,
   })
   const onSubmit = () => {
-    const { email, password } = getValues()
-    loginMutation({ variables: { loginInput: { email, password } } })
+    if (!loading) {
+      const { email, password } = getValues()
+      loginMutation({ variables: { loginInput: { email, password } } })
+    }
   }
 
   return (
@@ -83,7 +85,9 @@ export const Login = () => {
           {errors.password?.type === 'minLength' && (
             <FormError errorMessage='Password mut be more than 10 chars.' />
           )}
-          <button className='mt-3 btn'>Log In</button>
+          <button className='mt-3 btn'>
+            {loading ? 'Loading...' : 'Log In'}
+          </button>
           {loginMutationResult?.login.error && (
             <FormError errorMessage={loginMutationResult.login.error} />
           )}
