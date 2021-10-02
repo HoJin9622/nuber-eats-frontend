@@ -1,11 +1,9 @@
-import { useQuery } from '@apollo/client'
-import gql from 'graphql-tag'
 import React from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Redirect, Route, Switch } from 'react-router'
 import { Restaurants } from '../pages/client/restaurants'
-import { meQuery } from '../__generated__/meQuery'
 import { Header } from '../components/header'
+import { useMe } from '../hooks/useMe'
 
 const ClientRoutes = [
   <Route path='/' exact>
@@ -13,19 +11,8 @@ const ClientRoutes = [
   </Route>,
 ]
 
-const ME_QUERY = gql`
-  query meQuery {
-    me {
-      id
-      email
-      role
-      verified
-    }
-  }
-`
-
 export const LoggedInRouter = () => {
-  const { data, loading, error } = useQuery<meQuery>(ME_QUERY)
+  const { data, loading, error } = useMe()
   if (!data || loading || error) {
     return (
       <div className='h-screen flex justify-center items-center'>
