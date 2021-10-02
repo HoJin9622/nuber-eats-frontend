@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { authTokenVar, isLoggedInVar } from '../apollo'
 import { Button } from '../components/button'
 import { FormError } from '../components/form-error'
-import { LOCALSTORAGE_TOKEN } from '../constants'
+import { EMAIL_REGEX, LOCALSTORAGE_TOKEN } from '../constants'
 import nuberLogo from '../images/logo.svg'
 import {
   loginMutation,
@@ -64,7 +64,7 @@ export const Login = () => {
         <title>Login | Nuber Eats</title>
       </Helmet>
       <div className='w-full max-w-screen-sm flex flex-col px-5 items-center'>
-        <img src={nuberLogo} className='w-52 mb-10' />
+        <img src={nuberLogo} className='w-52 mb-10' alt='logo' />
         <h4 className='w-full font-medium text-left text-3xl mb-5'>
           Welcom back
         </h4>
@@ -75,8 +75,7 @@ export const Login = () => {
           <input
             {...register('email', {
               required: 'Email is required',
-              pattern:
-                /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+              pattern: EMAIL_REGEX,
             })}
             name='email'
             required
