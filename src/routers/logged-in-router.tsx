@@ -5,6 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { Redirect, Route, Switch } from 'react-router'
 import { Restaurants } from '../pages/client/restaurants'
 import { meQuery } from '../__generated__/meQuery'
+import { Header } from '../components/header'
 
 const ClientRoutes = [
   <Route path='/' exact>
@@ -34,6 +35,7 @@ export const LoggedInRouter = () => {
   }
   return (
     <Router>
+      <Header />
       <Switch>
         {data.me.role === 'Client' && ClientRoutes}
         <Redirect to='/' />
