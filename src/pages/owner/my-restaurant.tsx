@@ -3,6 +3,7 @@ import gql from 'graphql-tag'
 import React from 'react'
 import { useParams } from 'react-router'
 import { Link } from 'react-router-dom'
+import { Dish } from '../../components/dish'
 import { DISH_FRAGMENT, RESTAURANT_FRAGMENT } from '../../fragments'
 import {
   myRestaurant,
@@ -37,6 +38,8 @@ export const MyRestaurant = () => {
     { variables: { input: { id: +id } } }
   )
 
+  console.log(data)
+
   return (
     <div>
       <div
@@ -61,7 +64,17 @@ export const MyRestaurant = () => {
         <div className='mt-10'>
           {data?.myRestaurant.restaurant?.menu.length === 0 ? (
             <h4 className='text-xl mb-5'>Please upload a dish</h4>
-          ) : null}
+          ) : (
+            <div className='grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10'>
+              {data?.myRestaurant.restaurant?.menu.map((dish) => (
+                <Dish
+                  name={dish.name}
+                  description={dish.description}
+                  price={dish.price}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
