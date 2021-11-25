@@ -9,7 +9,7 @@ import {
   myRestaurant,
   myRestaurantVariables,
 } from '../../__generated__/myRestaurant'
-import { VictoryBar, VictoryChart, VictoryAxis } from 'victory'
+import { VictoryBar, VictoryChart, VictoryAxis, VictoryPie } from 'victory'
 
 export const MY_RESTAURANT_QUERY = gql`
   query myRestaurant($input: MyRestaurantInput!) {
@@ -38,8 +38,19 @@ export const MyRestaurant = () => {
     MY_RESTAURANT_QUERY,
     { variables: { input: { id: +id } } }
   )
-
-  console.log(data)
+  const chartData = [
+    { x: 1, y: 3000 },
+    { x: 2, y: 1500 },
+    { x: 3, y: 4250 },
+    { x: 4, y: 2300 },
+    { x: 5, y: 7150 },
+    { x: 6, y: 6830 },
+    { x: 7, y: 3000 },
+    { x: 8, y: 3000 },
+    { x: 9, y: 3000 },
+    { x: 10, y: 3000 },
+    { x: 11, y: 3000 },
+  ]
 
   return (
     <div>
@@ -80,22 +91,18 @@ export const MyRestaurant = () => {
         <div className='mt-20 mb-10'>
           <h4 className='text-center text-2xl font-medium'>Sales</h4>
           <div className='max-w-lg w-full mx-auto'>
-            <VictoryChart domainPadding={20}>
-              <VictoryAxis
-                label='Amount of Money'
+            {/* <VictoryChart domainPadding={20}> */}
+            {/* <VictoryAxis
+                tickFormat={(step) => `$${step / 1000}K`}
                 dependentAxis
-                tickValues={[20, 30, 40, 50, 60]}
               />
-              <VictoryAxis label='Days of Life' />
-              <VictoryBar
-                data={[
-                  { x: 10, y: 20 },
-                  { x: 20, y: 5 },
-                  { x: 35, y: 55 },
-                  { x: 45, y: 99 },
-                ]}
-              />
-            </VictoryChart>
+              <VictoryAxis tickFormat={(step) => `Day ${step}`} />
+              <VictoryBar data={chartData} /> */}
+            <VictoryPie
+              data={chartData}
+              colorScale={['tomato', 'orange', 'gold', 'cyan', 'navy']}
+            />
+            {/* </VictoryChart> */}
           </div>
         </div>
       </div>
