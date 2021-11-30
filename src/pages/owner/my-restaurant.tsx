@@ -4,12 +4,26 @@ import React from 'react'
 import { useParams } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Dish } from '../../components/dish'
-import { DISH_FRAGMENT, RESTAURANT_FRAGMENT } from '../../fragments'
+import {
+  DISH_FRAGMENT,
+  ORDERS_FRAGMENT,
+  RESTAURANT_FRAGMENT,
+} from '../../fragments'
 import {
   myRestaurant,
   myRestaurantVariables,
 } from '../../__generated__/myRestaurant'
-import { VictoryBar, VictoryChart, VictoryAxis, VictoryPie } from 'victory'
+import {
+  VictoryBar,
+  VictoryChart,
+  VictoryAxis,
+  VictoryPie,
+  VictoryVoronoiContainer,
+  VictoryLine,
+  VictoryTheme,
+  VictoryLabel,
+  VictoryTooltip,
+} from 'victory'
 
 export const MY_RESTAURANT_QUERY = gql`
   query myRestaurant($input: MyRestaurantInput!) {
@@ -21,11 +35,15 @@ export const MY_RESTAURANT_QUERY = gql`
         menu {
           ...DishParts
         }
+        orders {
+          ...OrderParts
+        }
       }
     }
   }
   ${RESTAURANT_FRAGMENT}
   ${DISH_FRAGMENT}
+  ${ORDERS_FRAGMENT}
 `
 
 interface IParams {
@@ -51,6 +69,7 @@ export const MyRestaurant = () => {
     { x: 10, y: 3000 },
     { x: 11, y: 3000 },
   ]
+  console.log(data)
 
   return (
     <div>
@@ -90,19 +109,36 @@ export const MyRestaurant = () => {
         </div>
         <div className='mt-20 mb-10'>
           <h4 className='text-center text-2xl font-medium'>Sales</h4>
-          <div className='max-w-lg w-full mx-auto'>
-            {/* <VictoryChart domainPadding={20}> */}
-            {/* <VictoryAxis
-                tickFormat={(step) => `$${step / 1000}K`}
-                dependentAxis
+          <div className='mt-10'>
+            <VictoryChart
+              theme={VictoryTheme.material}
+              height={500}
+              width={window.innerWidth}
+              domainPadding={50}
+              containerComponent={<VictoryVoronoiContainer />}
+            >
+              <VictoryLine
+                labels={({ datum }) => `$${datum.y}`}
+                labelComponent={
+                  <VictoryTooltip
+                    style={{ fontSize: 18 }}
+                    renderInPortal
+                    dy={-20}
+                  />
+                }
+                style={{ data: { strokeWidth: 5 } }}
+                interpolation='natural'
+                data={data?.myRestaurant.restaurant?.orders.map((order) => ({
+                  x: order.createdAt,
+                  y: order.total,
+                }))}
               />
-              <VictoryAxis tickFormat={(step) => `Day ${step}`} />
-              <VictoryBar data={chartData} /> */}
-            <VictoryPie
-              data={chartData}
-              colorScale={['tomato', 'orange', 'gold', 'cyan', 'navy']}
-            />
-            {/* </VictoryChart> */}
+              <VictoryAxis
+                tickLabelComponent={<VictoryLabel renderInPortal />}
+                style={{ tickLabels: { fontSize: 20 } }}
+                tickFormat={(tick) => new Date(tick).toLocaleDateString('ko')}
+              />
+            </VictoryChart>
           </div>
         </div>
       </div>
