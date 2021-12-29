@@ -14,10 +14,8 @@ import {
   myRestaurantVariables,
 } from '../../__generated__/myRestaurant'
 import {
-  VictoryBar,
   VictoryChart,
   VictoryAxis,
-  VictoryPie,
   VictoryVoronoiContainer,
   VictoryLine,
   VictoryTheme,
@@ -56,20 +54,6 @@ export const MyRestaurant = () => {
     MY_RESTAURANT_QUERY,
     { variables: { input: { id: +id } } }
   )
-  const chartData = [
-    { x: 1, y: 3000 },
-    { x: 2, y: 1500 },
-    { x: 3, y: 4250 },
-    { x: 4, y: 2300 },
-    { x: 5, y: 7150 },
-    { x: 6, y: 6830 },
-    { x: 7, y: 3000 },
-    { x: 8, y: 3000 },
-    { x: 9, y: 3000 },
-    { x: 10, y: 3000 },
-    { x: 11, y: 3000 },
-  ]
-  console.log(data)
 
   return (
     <div>

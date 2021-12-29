@@ -45,10 +45,9 @@ interface IRestaurantParams {
 
 export const Restaurant = () => {
   const params = useParams<IRestaurantParams>()
-  const { loading, data } = useQuery<restaurant, restaurantVariables>(
-    RESTAURANT_QUERY,
-    { variables: { input: { restaurantId: +params.id } } }
-  )
+  const { data } = useQuery<restaurant, restaurantVariables>(RESTAURANT_QUERY, {
+    variables: { input: { restaurantId: +params.id } },
+  })
   const [orderStarted, setOrderStarted] = useState(false)
   const [orderItems, setOrderItems] = useState<CreateOrderItemInput[]>([])
   const triggerStartOrder = () => {
@@ -137,6 +136,9 @@ export const Restaurant = () => {
   }
   const history = useHistory()
   const triggerConfirmOrder = () => {
+    if (placingOrder) {
+      return
+    }
     if (orderItems.length === 0) {
       alert("Cant't place empty order")
       return
