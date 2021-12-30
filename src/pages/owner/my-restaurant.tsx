@@ -1,11 +1,12 @@
-import { useQuery } from '@apollo/client'
+import { useQuery, useSubscription } from '@apollo/client'
 import gql from 'graphql-tag'
-import React from 'react'
-import { useParams } from 'react-router'
+import React, { useEffect } from 'react'
+import { useParams, useHistory } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { Dish } from '../../components/dish'
 import {
   DISH_FRAGMENT,
+  FULL_ORDER_FRAGMENT,
   ORDERS_FRAGMENT,
   RESTAURANT_FRAGMENT,
 } from '../../fragments'
@@ -22,6 +23,7 @@ import {
   VictoryLabel,
   VictoryTooltip,
 } from 'victory'
+import { pendingOrders } from '../../__generated__/pendingOrders'
 
 export const MY_RESTAURANT_QUERY = gql`
   query myRestaurant($input: MyRestaurantInput!) {
@@ -44,6 +46,15 @@ export const MY_RESTAURANT_QUERY = gql`
   ${ORDERS_FRAGMENT}
 `
 
+const PENDING_ORDERS_SUBSCRIPTION = gql`
+  subscription pendingOrders {
+    pendingOrders {
+      ...FullOrderParts
+    }
+  }
+  ${FULL_ORDER_FRAGMENT}
+`
+
 interface IParams {
   id: string
 }
@@ -54,6 +65,15 @@ export const MyRestaurant = () => {
     MY_RESTAURANT_QUERY,
     { variables: { input: { id: +id } } }
   )
+  const { data: subscriptionData } = useSubscription<pendingOrders>(
+    PENDING_ORDERS_SUBSCRIPTION
+  )
+  const history = useHistory()
+  useEffect(() => {
+    if (subscriptionData?.pendingOrders.id) {
+      history.push(`/orders/${subscriptionData.pendingOrders.id}`)
+    }
+  }, [subscriptionData])
 
   return (
     <div>
