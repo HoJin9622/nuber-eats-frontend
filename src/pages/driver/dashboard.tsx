@@ -51,6 +51,39 @@ export const Dashboard = () => {
     map.panTo(new google.maps.LatLng(driverCoords.lat, driverCoords.lng))
     setMap(map)
   }
+  const onGetRouteClick = () => {
+    if (map) {
+      const directionsService = new google.maps.DirectionsService()
+      const directionsRenderer = new google.maps.DirectionsRenderer({
+        polylineOptions: {
+          strokeColor: '#000',
+          strokeOpacity: 1,
+          strokeWeight: 3,
+        },
+      })
+      directionsRenderer.setMap(map)
+      directionsService.route(
+        {
+          origin: {
+            location: new google.maps.LatLng(
+              driverCoords.lat,
+              driverCoords.lng
+            ),
+          },
+          destination: {
+            location: new google.maps.LatLng(
+              driverCoords.lat + 0.01,
+              driverCoords.lng + 0.01
+            ),
+          },
+          travelMode: google.maps.TravelMode.TRANSIT,
+        },
+        (result) => {
+          directionsRenderer.setDirections(result)
+        }
+      )
+    }
+  }
   return (
     <div>
       <div
@@ -67,6 +100,7 @@ export const Dashboard = () => {
           <Driver lat={driverCoords.lat} lng={driverCoords.lng} />
         </GoogleMapReact>
       </div>
+      <button onClick={onGetRouteClick}>Get route</button>
     </div>
   )
 }
